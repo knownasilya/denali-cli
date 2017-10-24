@@ -6,8 +6,6 @@ import {
 import * as path from 'path';
 import * as fs from 'fs';
 import * as dedent from 'dedent-js';
-import * as nsp from 'nsp';
-import * as broccoli from 'broccoli';
 import * as rimraf from 'rimraf';
 import printSlowNodes from 'broccoli-slow-trees';
 import { sync as copyDereferenceSync } from 'copy-dereference';
@@ -168,6 +166,7 @@ export default class Project {
       this.rootTree = this.rootBuilder.toTree();
     }
 
+    const broccoli = require('broccoli');
     let broccoliBuilder = this.broccoliBuilder = new broccoli.Builder(this.rootTree);
     // tslint:disable-next-line:completed-docs
     function onExit() {
@@ -314,6 +313,7 @@ export default class Project {
    */
   protected auditPackage() {
     debug('sending package.json to nsp for audit');
+    const nsp = require('nsp');
     let pkg = path.join(this.dir, 'package.json');
     nsp.check({ package: pkg }, (err: any, vulnerabilities: Vulnerability[]) => {
       if (err && [ 'ENOTFOUND', 'ECONNRESET' ].indexOf(err.code) > -1) {
